@@ -29,25 +29,26 @@ const doUserTask = async (cloudClient, logger) => {
 // 家庭任务签到
 const doFamilyTask = async (cloudClient, logger) => {
   const { familyInfoResp } = await cloudClient.getFamilyList();
+  logger.info(familyInfoResp);
   if (familyInfoResp) {
-    let familyId = null;
-    //指定家庭签到
-    if (families.length > 0) {
-      const tagetFamily = familyInfoResp.find((familyInfo) =>
-        families.includes(familyInfo.remarkName)
-      );
-      if (tagetFamily) {
-        familyId = tagetFamily.familyId;
-      } else {
-        logger.error(
-          `没有加入到指定家庭分组${families
-            .map((family) => mask(family, 3, 7))
-            .toString()}`
-        );
-      }
-    } else {
-      familyId = familyInfoResp[0].familyId;
-    }
+    let familyId = familyInfoResp[0].familyId;
+    // //指定家庭签到
+    // if (families.length > 0) {
+    //   const tagetFamily = familyInfoResp.find((familyInfo) =>
+    //     families.includes(familyInfo.remarkName)
+    //   );
+    //   if (tagetFamily) {
+    //     familyId = tagetFamily.familyId;
+    //   } else {
+    //     logger.error(
+    //       `没有加入到指定家庭分组${families
+    //         .map((family) => mask(family, 3, 7))
+    //         .toString()}`
+    //     );
+    //   }
+    // } else {
+    //   familyId = familyInfoResp[0].familyId;
+    // }
     logger.info(`执行家庭签到ID:${familyId}`);
     const tasks = Array.from({ length: execThreshold }, () =>
       cloudClient.familyUserSign(familyId)
